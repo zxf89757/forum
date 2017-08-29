@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.hfut.forum.domain.Department" table="department">
+		<id name="did">
+			<generator class="native"/>
+		</id>
+		
+		<property name="dname"/>
+		
+		<set name="departmentMajors" lazy="false" inverse="true" order-by="mid">
+			<key column="did"/>
+			<one-to-many class="com.hfut.forum.domain.Major"/>
+		</set>
+		
+	</class>
+</hibernate-mapping>

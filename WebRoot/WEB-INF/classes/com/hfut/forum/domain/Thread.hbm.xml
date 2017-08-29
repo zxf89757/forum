@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.hfut.forum.domain.Thread" table="thread">
+		<id name="tid">
+			<generator class="native"/>
+		</id>
+		
+		<property name="dateCreated"/>
+		<property name="title"/>
+		<property name="content"/>
+		<property name="hit"/>
+		<property name="replyCount"/>
+		<property name="topped"/>
+		
+		<many-to-one name="course" lazy="false" class="com.hfut.forum.domain.Course" column="cid"></many-to-one>
+		<many-to-one name="user" lazy="false" class="com.hfut.forum.domain.User" column="uid"></many-to-one>
+		
+	</class>
+</hibernate-mapping>

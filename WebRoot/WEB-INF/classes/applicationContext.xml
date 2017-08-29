@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- 配置连接池: -->
+	<!-- 引入外部属性文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	<!-- 配置C3P0连接池: -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driver}"/>
+		<property name="jdbcUrl" value="${jdbc.url}"/>
+		<property name="user" value="${jdbc.user}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+	<!-- Hibernate的相关信息 -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<!-- 注入连接池 -->
+		<property name="dataSource" ref="dataSource"/>
+		<!-- 配置Hibernate的其他的属性 -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.connection.autocommit">false</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+		<!-- 配置Hibernate的映射文件 -->
+		<property name="mappingResources">
+			<list>
+			
+				<value>com/hfut/forum/domain/Adminuser.hbm.xml</value>
+				<value>com/hfut/forum/domain/Course.hbm.xml</value>
+				<value>com/hfut/forum/domain/CourseUser.hbm.xml</value>
+				<value>com/hfut/forum/domain/Department.hbm.xml</value>
+				<value>com/hfut/forum/domain/Major.hbm.xml</value>
+				<value>com/hfut/forum/domain/MajorCourse.hbm.xml</value>
+				<value>com/hfut/forum/domain/Reply.hbm.xml</value>
+				<value>com/hfut/forum/domain/Thread.hbm.xml</value>
+				<value>com/hfut/forum/domain/User.hbm.xml</value>
+				<value>com/hfut/forum/domain/FloorReply.hbm.xml</value>
+				
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 事务管理: -->
+	<!-- 事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 开启注解事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<!-- Action的配置 ===========================-->
+	
+	<!-- 首页访问的Action -->
+	<bean id="indexAction" class="com.hfut.forum.action.IndexAction" scope="prototype">
+		<property name="departmentService" ref="departmentService"/>
+		<property name="threadService" ref="threadService"/>
+	</bean>
+	
+	<!-- 配置验证码Action -->
+	<bean id="checkImgAction" class="com.hfut.forum.action.CheckImgAction" scope="prototype">
+		
+	</bean>
+	
+	<!-- 配置文件上传Action -->
+	<bean id="uploadAction" class="com.hfut.forum.action.UploadAction" scope="prototype">
+		
+	</bean>
+	
+	<!-- 用户模块的Action -->
+	<bean id="userAction" class="com.hfut.forum.action.UserAction" scope="prototype">
+		<property name="userService" ref="userService"/>
+		<property name="threadService" ref="threadService"/>
+	</bean>
+	
+	<!-- 帖子模块的Action -->
+	<bean id="threadAction" class="com.hfut.forum.action.ThreadAction" scope="prototype">
+		<property name="threadService" ref="threadService"/>
+		<property name="courseService" ref="courseService"/>
+		<property name="replyService" ref="replyService"/>
+	</bean>
+	
+	<!-- 回复模块的Action -->
+	<bean id="replyAction" class="com.hfut.forum.action.ReplyAction" scope="prototype">
+		<property name="threadService" ref="threadService"/>
+		<property name="replyService" ref="replyService"/>
+	</bean>
+	
+	<!-- 专业模块的Action -->
+	<bean id="majorAction" class="com.hfut.forum.action.MajorAction" scope="prototype">
+		<property name="majorCourseService" ref="majorCourseService"/>
+	</bean>
+	
+	<!-- 楼中楼模块的Action -->
+	<bean id="floorReplyAction" class="com.hfut.forum.action.FloorReplyAction" scope="prototype">
+		<property name="userService" ref="userService"/>
+		<property name="floorReplyService" ref="floorReplyService"/>
+		<property name="replyService" ref="replyService"/>
+	</bean>
+	
+	<!-- Service的配置  ===========================-->
+	<bean id="userService" class="com.hfut.forum.service.UserService">
+		<property name="userDao" ref="userDao"/>
+	</bean>
+	<bean id="departmentService" class="com.hfut.forum.service.DepartmentService">
+		<property name="departmentDao" ref="departmentDao"/>
+	</bean>
+	<bean id="threadService" class="com.hfut.forum.service.ThreadService">
+		<property name="threadDao" ref="threadDao"/>
+	</bean>
+	<bean id="majorCourseService" class="com.hfut.forum.service.MajorCourseService">
+		<property name="majorCourseDao" ref="majorCourseDao"/>
+	</bean>
+	<bean id="courseService" class="com.hfut.forum.service.CourseService">
+		<property name="courseDao" ref="courseDao"/>
+	</bean>
+	<bean id="replyService" class="com.hfut.forum.service.ReplyService">
+		<property name="replyDao" ref="replyDao"/>
+	</bean>
+	<bean id="floorReplyService" class="com.hfut.forum.service.FloorReplyService">
+		<property name="floorReplyDao" ref="floorReplyDao"/>
+	</bean>
+	<!-- Dao的配置  ===========================-->
+	<bean id="userDao" class="com.hfut.forum.dao.UserDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="departmentDao" class="com.hfut.forum.dao.DepartmentDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="threadDao" class="com.hfut.forum.dao.ThreadDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="majorCourseDao" class="com.hfut.forum.dao.MajorCourseDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="courseDao" class="com.hfut.forum.dao.CourseDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="replyDao" class="com.hfut.forum.dao.ReplyDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="floorReplyDao" class="com.hfut.forum.dao.FloorReplyDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+</beans>

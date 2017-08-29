@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.multipart.saveDir" value="/tmp"/>
+    <constant name="struts.devMode" value="false" />
+    <constant name="struts.i18n.encoding" value="utf-8" />
+    <constant name="struts.multipart.maxSize" value="104857600" />
+    
+	<package name="forum" extends="struts-default" namespace="/">
+		<!-- 配置自定义拦截器 -->
+		<!-- 配置全局result -->
+		<global-results>
+			<result name="error">/error500.jsp</result>
+			<result name="indexPage" type="redirectAction">index</result>
+			<result name="success" type="redirectAction">${prePage}</result>
+			<result name="loginPage">/WEB-INF/jsp/login.jsp</result>
+		</global-results>
+		
+		<!-- 配置首页访问的Action -->
+		<action name="index" class="indexAction">
+			<result name="index">/WEB-INF/jsp/index.jsp</result>
+		</action>
+		
+		<!-- 配置用户模块的Action -->
+		<action name="user_*" class="userAction" method="{1}">
+			<result name="registPage">/WEB-INF/jsp/regist.jsp</result>
+			<result name="input">/WEB-INF/jsp/regist.jsp</result>
+			<result name="findByUsername">/WEB-INF/jsp/userInfo.jsp</result>
+			 
+		</action>
+		
+		<!-- 配置验证码Action -->
+		<action name="checkImg" class="checkImgAction"></action>
+		
+		<!-- 文件上传Action -->
+		<action name="upload_*" class="uploadAction" method="{1}"></action>
+		
+		<!-- 帖子模块的Action -->
+		<action name="thread_*" class="threadAction" method="{1}">
+			<result name="findByCid">/WEB-INF/jsp/courseInfo.jsp</result>
+			<result name="findByTid">/WEB-INF/jsp/replyInfo.jsp</result>
+			<result name="saveSuccess" type="redirectAction">${gotoPage}</result>
+			<result name="search">/WEB-INF/jsp/searchResult.jsp</result>
+		</action>
+		
+		<!-- 回复模块的Action -->
+		<action name="reply_*" class="replyAction" method="{1}">
+			<result name="saveSuccess" type="redirectAction">${gotoPage}</result>	
+		</action>
+		
+		<!-- 专业模块的Action -->
+		<action name="major_*" class="majorAction" method="{1}">
+			<result name="findByMid">/WEB-INF/jsp/mcContents.jsp</result>
+		</action>
+		
+		<!-- 楼中楼模块的Action -->
+		<action name="floorReply_*" class="floorReplyAction" method="{1}"></action>
+		
+	</package>
+	
+</struts>

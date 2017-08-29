@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.hfut.forum.domain.Major" table="major">
+		<id name="mid">
+			<generator class="native"/>
+		</id>
+		
+		<property name="mname"/>
+		
+		<many-to-one name="department" lazy="false" class="com.hfut.forum.domain.Department" column="did"></many-to-one>
+		
+	</class>
+</hibernate-mapping>

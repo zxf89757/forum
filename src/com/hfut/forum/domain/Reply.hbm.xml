@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.hfut.forum.domain.Reply" table="reply">
+		<id name="rid">
+			<generator class="native"/>
+		</id>
+		
+		<property name="dateCreated"/>
+		<property name="content"/>
+		<property name="floor"/>
+		<property name="floorReplyCount"/>
+		
+		<many-to-one name="thread" lazy="false" class="com.hfut.forum.domain.Thread" column="tid"></many-to-one>
+		<many-to-one name="user" lazy="false" class="com.hfut.forum.domain.User" column="uid"></many-to-one>
+		
+	</class>
+</hibernate-mapping>

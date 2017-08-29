@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.hfut.forum.domain.Course" table="course">
+		<id name="cid">
+			<generator class="native"/>
+		</id>
+		
+		<property name="describe"/>
+		<property name="name"/>
+		<property name="threadCount"/>
+		<property name="image"/>
+		
+		<set name="courseCourseUsers" lazy="false">
+			<key column="cid"/>
+			<one-to-many class="com.hfut.forum.domain.CourseUser"/>
+		</set>
+		
+	</class>
+</hibernate-mapping>
