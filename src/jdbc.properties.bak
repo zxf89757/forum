@@ -1,4 +1,0 @@
-jdbc.driver = com.mysql.jdbc.Driver
-jdbc.url = jdbc:mysql://localhost/for2
-jdbc.user = root
-jdbc.password = c5c8ee6eÅ
